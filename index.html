@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamified Job Hunt Tracker</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Scoreboard -->
+        <aside class="scoreboard">
+            <h2>🏆 Leaderboard</h2>
+            <ul id="scoreList">
+                <li data-user="Chan">Chan: <span class="user-score" id="score-Chan">0</span> XP</li>
+                <li data-user="Sabina">Sabina: <span class="user-score" id="score-Sabina">0</span> XP</li>
+            </ul>
+
+            <!-- Add User Section (Inside Scoreboard) -->
+            <div class="add-user">
+                <input type="text" id="newUserInput" placeholder="Enter name">
+                <button id="addUserBtn">Add User</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <h1>🎮 Job Hunt XP Tracker</h1>
+
+            <!-- User Selector -->
+            <div class="user-selector">
+                <label for="userSelect">Select User:</label>
+                <select id="userSelect">
+                    <option value="Chan">Chan</option>
+                    <option value="Sabina">Sabina</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="buttons">
+                <button id="applyBtn" class="game-button">
+                    Applied to a Job
+                    <span class="point-value">+25 XP</span>
+                </button>
+                <button id="linkedinBtn" class="game-button">
+                    Messaged Someone on LinkedIn
+                    <span class="point-value">+10 XP</span>
+                </button>
+                <button id="coverLetterBtn" class="game-button">
+                    Wrote a Cover Letter
+                    <span class="point-value">+10 XP</span>
+                </button>
+                <button id="resumeBtn" class="game-button">
+                    Fixed Up Resume
+                    <span class="point-value">+5 XP</span>
+                </button>
+            </div>
+
+            <!-- Spending Points Buttons -->
+            <div class="spend-buttons">
+                <button id="sweetTreatBtn" class="spend-button">
+                    Get Sweet Treat
+                    <span class="point-value">-100 XP</span>
+                </button>
+                <button id="buySomethingBtn" class="spend-button">
+                    Buy Something Nice
+                    <span class="point-value">-250 XP</span>
+                </button>
+            </div>
+
+            <!-- History -->
+            <div class="history">
+                <h2>📅 History</h2>
+                <ul id="historyList"></ul>
+            </div>
+        </main>
+        <!-- Popup -->
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <p id="popupMessage"></p>
+                <p id="dollarValue" class="dollar-value"></p> <!-- Added the small dollar value text -->
+                <button id="popupBtn" class="close-btn">Close</button>
+            </div>
+        </div>
+        <!-- Not Enough Points Modal -->
+        <div id="notEnoughPointsModal" class="modal">
+            <div class="modal-content">
+                <h2>Oops!</h2>
+                <p id="notEnoughPointsMessage"></p>
+                <button id="closeNotEnoughPointsBtn">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

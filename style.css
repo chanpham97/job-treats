@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #1e1e2e;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar Scoreboard */
+.scoreboard {
+    width: 250px;
+    background: #222;
+    padding: 20px;
+    height: 100vh;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.scoreboard h2 {
+    text-align: center;
+    color: #ffcc00;
+}
+
+.scoreboard ul {
+    list-style: none;
+    padding: 0;
+}
+
+.scoreboard li {
+    background: #44475a;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    color: #ffcc00;
+}
+
+/* Main Content */
+.content {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 22px;
+}
+
+/* User Selector */
+.user-selector {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* User Select Dropdown */
+#userSelect {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    height: 45px; /* Adjust height to fit the longest name */
+    line-height: 20px; /* Ensure text is centered */
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.game-button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 200px;
+    height: 80px;
+    justify-content: center;
+}
+
+.point-value {
+    font-size: 10px;
+    color: #333;
+    margin-top: 4px;
+}
+
+.game-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* History */
+.history {
+    margin-top: 20px;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #44475a;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #ffcc00;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .game-button {
+        width: 90%;
+        height: auto;
+    }
+}
+
+/* Add User Section */
+.add-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#newUserInput {
+    font-family: 'Press Start 2P', cursive; /* Apply the same font */
+    font-size: 14px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 2px solid #ffcc00;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #333;
+    width: 90%;
+    text-align: center;
+}
+
+#addUserBtn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#addUserBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* User Selector */
+.user-selector {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#userSelect {
+    font-family: 'Press Start 2P', cursive; /* Apply the same font */
+    font-size: 16px; /* Make the font larger */
+    padding: 12px;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    width: 100%; /* Make it responsive to fit content */
+    max-width: 200px; /* Optional: control maximum width if needed */
+    text-align: center; /* Center the text */
+}
+
+/* Pop-up Styling */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcc00;
+    z-index: 9999;
+}
+
+.popup-content {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    border: 2px solid #ffcc00;
+}
+
+#popupMessage {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#popupBtn {
+    background-color: #ffcc00;
+    color: #1e1e2e;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#popupBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* Spending Points Buttons */
+.spend-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.spend-button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    background: #28a745; /* Green background for spending buttons */
+    color: #fff;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 200px;
+    height: 80px;
+    justify-content: center;
+}
+
+.spend-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.5);
+}
+
+.spend-button .point-value {
+    font-size: 10px; /* Smaller font size for point total */
+    margin-top: 4px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Black with transparency */
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.modal-content {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: red;
+}
+
+.modal-content p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-content button:hover {
+    background-color: #ffb900;
+}
