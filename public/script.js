@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Spending points functions
     document.getElementById("sweetTreatBtn").addEventListener("click", function () {
-        subtractPoints(100, "Got sweet treat")
+        subtractPoints(100, "Got a sweet treat")
     });
 
     document.getElementById("buySomethingBtn").addEventListener("click", function () {
