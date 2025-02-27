@@ -1,6 +1,7 @@
 // Add User Flow
 const addUserBtn = document.getElementById("addUserBtn");
 const userNameInput = document.getElementById("newUserInput");
+const userSelect = document.getElementById("userSelect");
 
 async function postUser() {
     try {
@@ -29,9 +30,21 @@ addUserBtn.addEventListener("click", () => {
     postUser()
 })
 
-const userSelect = document.getElementById("userSelect");
+function missingPoints(points) {
+    if (points > 0) return 0
+    
+    const userScore = document.getElementById(`score-${userSelect.value}`).textContent
+    const netPoints = Number(userScore) + points
+    console.log(netPoints)
+    return netPoints > 0 ? 0 : Math.abs(netPoints)
+}
 
 async function postAction(points, action) {
+    if (missingPoints(points) > 0) {
+        showNotEnoughPointsModal(`You need ${missingPoints(points)} more points for selected reward.`);
+        return;
+    }
+
     try {
         const response = await fetch("/action/add", {
             method: "POST",
@@ -67,6 +80,22 @@ function showPopup(message, dollarAmount) {
     }
     popup.style.display = 'flex';
 }
+
+// Not Enough Points Modal
+const notEnoughPointsModal = document.getElementById("notEnoughPointsModal");
+const closeNotEnoughPointsBtn = document.getElementById("closeNotEnoughPointsBtn");
+const notEnoughPointsMessage = document.getElementById("notEnoughPointsMessage");
+
+// Show the modal for not enough points
+function showNotEnoughPointsModal(message) {
+    notEnoughPointsMessage.textContent = message;
+    notEnoughPointsModal.style.display = "flex"; // Make sure the modal is visible
+}
+
+// Close the modal
+closeNotEnoughPointsBtn.addEventListener("click", function () {
+    notEnoughPointsModal.style.display = "none";
+});
 
 // Hide the pop-up when the button is clicked
 document.getElementById('popupBtn').addEventListener('click', function () {
@@ -161,55 +190,5 @@ document.getElementById("buySomethingBtn").addEventListener("click", function ()
         }
     }
 
-
-    // Not Enough Points Modal
-    const notEnoughPointsModal = document.getElementById("notEnoughPointsModal");
-    const closeNotEnoughPointsBtn = document.getElementById("closeNotEnoughPointsBtn");
-    const notEnoughPointsMessage = document.getElementById("notEnoughPointsMessage");
-
-    // Show the modal for not enough points
-    function showNotEnoughPointsModal(message) {
-        notEnoughPointsMessage.textContent = message;
-        notEnoughPointsModal.style.display = "flex"; // Make sure the modal is visible
-    }
-
-    // Close the modal
-    closeNotEnoughPointsBtn.addEventListener("click", function () {
-        notEnoughPointsModal.style.display = "none";
-    });
-
-    // Add User functionality
-    addUserBtn.addEventListener("click", function () {
-        const userName = userNameInput.value.trim();
-        if (userName && !(userName in scores)) {
-            scores[userName] = 0;
-
-            // Add user to popupShown object to track pop-up status
-            popupShown[userName] = {
-                100: false,
-                250: false
-            };
-
-            // Create a new option element for the select dropdown
-            const option = document.createElement("option");
-            option.value = userName;
-            option.textContent = userName;
-            userSelect.appendChild(option);
-
-            // Create a new <li> in the score list for the user
-            const scoreItem = document.createElement("li");
-            scoreItem.textContent = `${userName}: 0 XP`;
-            scoreList.appendChild(scoreItem);
-
-            // Reset the user input field
-            userNameInput.value = "";
-        } else if (userName === "") {
-            alert("Please enter a valid name.");
-        } else {
-            alert("This user already exists.");
-        }
-    });
-
-    updateScoreboard();
 });
 */
