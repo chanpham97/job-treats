@@ -1,21 +1,105 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let scores = { "Chan": 0, "Sabina": 0 };
-    const scoreDisplayChan = document.getElementById("score-Chan");
-    const scoreDisplaySabina = document.getElementById("score-Sabina");
-    const historyList = document.getElementById("historyList");
-    const userSelect = document.getElementById("userSelect");
-    const addUserBtn = document.getElementById("addUserBtn");
-    const userNameInput = document.getElementById("newUserInput");
+// Add User Flow
+const addUserBtn = document.getElementById("addUserBtn");
+const userNameInput = document.getElementById("newUserInput");
 
-    function getCurrentDate() {
-        const today = new Date();
-        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Get month and ensure it's two digits
-        const day = today.getDate().toString().padStart(2, '0'); // Get day and ensure it's two digits
-        const year = today.getFullYear().toString().slice(-2); // Get last two digits of the year
+async function postUser() {
+    try {
+        const response = await fetch("/user/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "name": userNameInput.value
+            })
 
-        return `${month}/${day}/${year}`;
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        console.log(json);
+        window.location.href = "/"
+    } catch (error) {
+        console.error(error.message);
     }
+}
 
+addUserBtn.addEventListener("click", () => {
+    postUser()
+})
+
+const userSelect = document.getElementById("userSelect");
+
+async function postAction(points, action) {
+    try {
+        const response = await fetch("/action/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "name": action,
+                "user": userSelect.value,
+                "points": points
+            })
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        const json = await response.json();
+        console.log(json);
+        window.location.href = "/"
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+// Show the pop-up message
+function showPopup(message, dollarAmount) {
+    let popup = document.getElementById('popup');
+    let popupMessage = document.getElementById('popupMessage');
+    let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
+
+    popupMessage.textContent = message;
+    if (dollarAmount) {
+        dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
+    }
+    popup.style.display = 'flex';
+}
+
+// Hide the pop-up when the button is clicked
+document.getElementById('popupBtn').addEventListener('click', function () {
+    document.getElementById('popup').style.display = 'none';
+});
+
+// Event listeners for each action button
+document.getElementById("applyBtn").addEventListener("click", function () {
+    postAction(25, "Applied to a Job");
+});
+
+document.getElementById("linkedinBtn").addEventListener("click", function () {
+    postAction(10, "Reached Out on LinkedIn");
+});
+
+document.getElementById("coverLetterBtn").addEventListener("click", function () {
+    postAction(10, "Wrote a Cover Letter");
+});
+
+document.getElementById("resumeBtn").addEventListener("click", function () {
+    postAction(5, "Fixed Up Resume");
+});
+
+// Spending points functions
+document.getElementById("sweetTreatBtn").addEventListener("click", function () {
+    postAction(-100, "Got a sweet treat")
+});
+
+document.getElementById("buySomethingBtn").addEventListener("click", function () {
+    postAction(-250, "Bought something nice")
+});
+
+/*
     // Track if 100 point pop-up has been shown for each user
     let popupShown = {
         "Chan": {
@@ -27,11 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
             250: false
         }
     };
-
-    function updateScoreboard() {
-        scoreDisplayChan.textContent = scores["Chan"];
-        scoreDisplaySabina.textContent = scores["Sabina"];
-    }
 
     // Function to update score and show pop-up
     function addPoints(points, action) {
@@ -55,40 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Show the pop-up message
-    function showPopup(message, dollarAmount) {
-        let popup = document.getElementById('popup');
-        let popupMessage = document.getElementById('popupMessage');
-        let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
-
-        popupMessage.textContent = message;
-        if (dollarAmount) {
-            dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
-        }
-        popup.style.display = 'flex';
-    }
-
-    // Hide the pop-up when the button is clicked
-    document.getElementById('popupBtn').addEventListener('click', function () {
-        document.getElementById('popup').style.display = 'none';
-    });
-
-    // Event listeners for each action button
-    document.getElementById("applyBtn").addEventListener("click", function () {
-        addPoints(25, "Applied to a Job");
-    });
-
-    document.getElementById("linkedinBtn").addEventListener("click", function () {
-        addPoints(10, "Reached Out on LinkedIn");
-    });
-
-    document.getElementById("coverLetterBtn").addEventListener("click", function () {
-        addPoints(10, "Wrote a Cover Letter");
-    });
-
-    document.getElementById("resumeBtn").addEventListener("click", function () {
-        addPoints(5, "Fixed Up Resume");
-    });
 
     function subtractPoints(points, action) {
         const user = userSelect.value;
@@ -116,14 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Spending points functions
-    document.getElementById("sweetTreatBtn").addEventListener("click", function () {
-        subtractPoints(100, "Got a sweet treat")
-    });
-
-    document.getElementById("buySomethingBtn").addEventListener("click", function () {
-        subtractPoints(250, "Bought something nice")
-    });
 
     // Not Enough Points Modal
     const notEnoughPointsModal = document.getElementById("notEnoughPointsModal");
@@ -175,3 +212,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateScoreboard();
 });
+*/
