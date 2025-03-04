@@ -54,7 +54,7 @@ function formatDate(date) {
 app.get("/", async function (req, res) {
     const data = {
         users: await User.find(),
-        actions: await Action.find().sort({ date: -1 }).populate("user")
+        actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
     }
     res.render("scoreboard.ejs", data)
 })
@@ -98,7 +98,7 @@ app.post("/action/add", async function (req, res) {
     const newAction = new Action({
         name: req.body.name,
         user: user._id,
-        points: req.body.points,
+        points: Number(req.body.points),
         formattedDate: formatDate(new Date())
     })
 
@@ -112,6 +112,7 @@ app.post("/action/add", async function (req, res) {
     }
 })
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
     console.log("Server started")
 })
