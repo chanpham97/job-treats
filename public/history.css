@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #1e1e2e;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Main Content */
+.content {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 22px;
+}
+
+/* Home Button */
+.home-button-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.home-button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* History Section */
+.history {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#historyList {
+    list-style: none;
+    padding: 0;
+}
+
+#historyList li {
+    background: #44475a;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #ffcc00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-action {
+    background: #e74c3c;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.delete-action:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5);
+}
+
+/* Add Old Action Section */
+.add-old-action {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.add-old-action input {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 8px;
+    margin: 10px;
+    border: 2px solid #ffcc00;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #333;
+    width: 250px;
+}
+
+.add-old-action button {
+    font-family: 'Press Start 2P', cursive;
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.add-old-action button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .add-old-action input, .add-old-action button {
+        width: 80%;
+    }
+}
+
+/* Delete Action Button */
+.delete-action {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    background: #e74c3c;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.delete-action:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5);
+}
+
+/* Home Button */
+.home-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.add-old-action select {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 8px;
+    margin: 10px;
+    border: 2px solid #ffcc00;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #333;
+    min-width: 250px; /* minimum width */
+    width: auto; /* allows content to determine width */
+    max-width: 100%; /* prevents overflow on small screens */
+    white-space: nowrap; /* prevents text from wrapping */
+    text-overflow: ellipsis; /* adds ... if text is too long */
+}
+
+.no-actions-message {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcc00;
+    /* or match your existing text styles */
+}

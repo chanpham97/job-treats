@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 const app = express()
 
 try {
-    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/jobtreat?retryWrites=true&w=majority&appName=Cluster0`)
     console.log("Connected to MongoDB")
 } catch (error) {
     console.log(error)
@@ -36,9 +36,7 @@ const actionSchema = new Schema({
 });
 
 const userSchema = new Schema({
-    name: { type: String, required: true, unique: true },
-    experiencePoints: { type: Number, default: 0 },
-    spendingPoints: { type: Number, default: 0 }
+    name: { type: String, required: true, unique: true }
 });
 
 const User = model('User', userSchema);
@@ -51,9 +49,29 @@ function formatDate(date) {
     return `${month}/${day}/${year}`;
 }
 
+async function getUsersWithPoints() {
+    return User.aggregate([
+        {
+            $lookup: {
+                from: 'actions',
+                localField: '_id',
+                foreignField: 'user',
+                as: 'actions'
+            }
+        },
+        {
+            $addFields: {
+                experiencePoints: {
+                    $sum: '$actions.points'
+                }
+            }
+        }
+    ]);
+}
+
 app.get("/", async function (req, res) {
     const data = {
-        users: await User.find(),
+        users: await getUsersWithPoints(),
         actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
     }
     res.render("scoreboard.ejs", data)
@@ -76,40 +94,53 @@ app.post("/user/add", async function (req, res) {
     }
 })
 
-app.post("/user/adjust-points", async function (req, res) {
-    const user = await User.findOne({ name: req.body.user })
-    try {
-        user.experiencePoints += req.body.points
-        const response = await user.save()
-        res.json(response)
-    } catch (error) {
-        console.error(error.message);
-    }
-})
-
 app.get("/actions", async function (req, res) {
     res.json(await Action.find().sort({ date: -1 }).populate("user"))
 })
 
 app.post("/action/add", async function (req, res) {
     console.log(`Posting ${req.body.name} for ${req.body.user}`)
+    let actionDate = req.body.date ? new Date(req.body.date) : new Date();
     const user = await User.findOne({ name: req.body.user })
 
     const newAction = new Action({
         name: req.body.name,
         user: user._id,
         points: Number(req.body.points),
-        formattedDate: formatDate(new Date())
+        date: actionDate,
+        formattedDate: formatDate(actionDate)
     })
 
     try {
         const response = await newAction.save()
-        user.experiencePoints += req.body.points
-        await user.save()
         res.json(response)
     } catch (error) {
         console.error(error.message);
     }
+})
+
+app.delete('/action/delete/:id', async (req, res) => {
+    try {
+        const deletedAction = await Action.findOneAndDelete({ _id: req.params.id });
+
+        if (!deletedAction) {
+            return res.status(404).json({ message: 'Action not found' });
+        }
+
+        res.json({ message: 'Action deleted successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get("/history", async function (req, res) {
+    const data = {
+        users: await User.find(),
+        actionTypes: ["Applied to a Job", "Messaged Someone on LinkedIn", "Wrote a Cover Letter", "Fixed Up Resume"],
+        actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
+    }
+    res.render("history.ejs", data)
 })
 
 const PORT = process.env.PORT || 3000;

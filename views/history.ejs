@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Treats - History</title>
+    <link rel="stylesheet" href="/history.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Action History List -->
+            <div class="history">
+                <h2>📅 Action History</h2>
+                <% if (actions && actions.length > 0) { %>
+                    <ul id="historyList">
+                        <% for (let i=0; i < actions.length; i++){ %>
+                            <li>
+                                <%= actions[i].user.name %>: <%= actions[i].name %> (<%= actions[i].formattedDate %>)
+                                    <button class="delete-action" data-id="<%= actions[i]._id %>">Delete</button>
+                            </li>
+                            <% } %>
+                    </ul>                <% } else { %>
+                    <div class="no-actions-message">
+                        There are currently no actions
+                    </div>
+                <% } %>
+
+            </div>
+
+            <!-- Add Old Action Section -->
+            <div class="add-old-action">
+                <h2>Add Old Action</h2>
+                <form id="addOldActionForm">
+                    <select id="oldUserName" required>
+                        <% for (let i=0; i < users.length; i++){ %>
+                            <option value="<%= users[i].name %>">
+                                <%= users[i].name %>
+                            </option>
+                        <% } %>
+                    </select>
+                    <select id="oldActionName" required>
+                        <% for (let i=0; i < actionTypes.length; i++){ %>
+                            <option value="<%= actionTypes[i] %>">
+                                <%= actionTypes[i] %>
+                            </option>
+                        <% } %>
+                    </select>
+                    <input type="date" id="oldActionDate" required>
+                    <button type="submit" class="game-button">Add Action</button>
+                </form>
+            </div>
+
+            <!-- Go Back Home Button -->
+            <div class="home-button-container">
+                <a href="/" class="game-button home-button">Back to Home</a>
+            </div>
+        </main>
+    </div>
+
+    <script src="history.js"></script>
+</body>
+
+</html>

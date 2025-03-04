@@ -32,7 +32,7 @@ addUserBtn.addEventListener("click", () => {
 
 function missingPoints(points) {
     if (points > 0) return 0
-    
+
     const userScore = document.getElementById(`score-${userSelect.value}`).textContent
     const netPoints = Number(userScore) + points
     console.log(netPoints)
@@ -66,19 +66,6 @@ async function postAction(points, action) {
     } catch (error) {
         console.error(error.message);
     }
-}
-
-// Show the pop-up message
-function showPopup(message, dollarAmount) {
-    let popup = document.getElementById('popup');
-    let popupMessage = document.getElementById('popupMessage');
-    let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
-
-    popupMessage.textContent = message;
-    if (dollarAmount) {
-        dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
-    }
-    popup.style.display = 'flex';
 }
 
 // Not Enough Points Modal
@@ -140,6 +127,19 @@ document.getElementById("buySomethingBtn").addEventListener("click", function ()
             250: false
         }
     };
+
+    // Show the pop-up message
+function showPopup(message, dollarAmount) {
+    let popup = document.getElementById('popup');
+    let popupMessage = document.getElementById('popupMessage');
+    let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
+
+    popupMessage.textContent = message;
+    if (dollarAmount) {
+        dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
+    }
+    popup.style.display = 'flex';
+    }
 
     // Function to update score and show pop-up
     function addPoints(points, action) {

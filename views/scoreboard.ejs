@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamified Job Hunt Tracker</title>
+    <title>Job Treats</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -76,12 +76,21 @@
 
             <!-- History -->
             <div class="history">
-                <h2>📅 History</h2>
+                <h2>📅 Recent Actions</h2>
+                <% if (actions && actions.length> 0) { %>
                 <ul id="historyList">
                     <% for (let i = 0; i < actions.length; i++){ %>
                         <li><%= actions[i].user.name %>: <%= actions[i].name %> (<%= actions[i].formattedDate %>)</li>
                     <% } %>
                 </ul>
+                <% } else { %>
+                    <div class="no-actions-message">
+                        There are no recent actions
+                    </div>
+                    <% } %>
+
+                <a href="/history" class="history-button">View Full History</a>
+
             </div>
         </main>
         <!-- Popup -->
