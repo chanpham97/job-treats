@@ -46,12 +46,14 @@
                     </select>
                     <select id="oldActionName" required>
                         <% for (let i=0; i < actionTypes.length; i++){ %>
+                            <% if (actionTypes[i].points > 0) { %>
                             <option value="<%= actionTypes[i].name %>"
                                 data-id="<%= actionTypes[i]._id %>"
                                 data-points="<%= actionTypes[i].points %>"
                                 class="action-type-option">
                                 <%= actionTypes[i].name %>
                             </option>
+                            <% } %>
                             <% } %>
                     </select>
                     <input type="date" id="oldActionDate" required>
