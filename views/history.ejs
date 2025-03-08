@@ -15,19 +15,21 @@
             <!-- Action History List -->
             <div class="history">
                 <h2>📅 Action History</h2>
-                <% if (actions && actions.length > 0) { %>
+                <% if (actions && actions.length> 0) { %>
                     <ul id="historyList">
                         <% for (let i=0; i < actions.length; i++){ %>
                             <li>
                                 <%= actions[i].user.name %>: <%= actions[i].name %> (<%= actions[i].formattedDate %>)
-                                    <button class="delete-action" data-id="<%= actions[i]._id %>">Delete</button>
+                                            <button class="delete-action"
+                                                data-id="<%= actions[i]._id %>">Delete</button>
                             </li>
                             <% } %>
-                    </ul>                <% } else { %>
-                    <div class="no-actions-message">
-                        There are currently no actions
-                    </div>
-                <% } %>
+                    </ul>
+                    <% } else { %>
+                        <div class="no-actions-message">
+                            There are currently no actions
+                        </div>
+                        <% } %>
 
             </div>
 
@@ -40,14 +42,17 @@
                             <option value="<%= users[i].name %>">
                                 <%= users[i].name %>
                             </option>
-                        <% } %>
+                            <% } %>
                     </select>
                     <select id="oldActionName" required>
                         <% for (let i=0; i < actionTypes.length; i++){ %>
-                            <option value="<%= actionTypes[i] %>">
-                                <%= actionTypes[i] %>
+                            <option value="<%= actionTypes[i].name %>"
+                                data-id="<%= actionTypes[i]._id %>"
+                                data-points="<%= actionTypes[i].points %>"
+                                class="action-type-option">
+                                <%= actionTypes[i].name %>
                             </option>
-                        <% } %>
+                            <% } %>
                     </select>
                     <input type="date" id="oldActionDate" required>
                     <button type="submit" class="game-button">Add Action</button>

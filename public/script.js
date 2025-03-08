@@ -30,32 +30,37 @@ addUserBtn.addEventListener("click", () => {
     postUser()
 })
 
+// Posting action flow
 function missingPoints(points) {
     if (points > 0) return 0
 
     const userScore = document.getElementById(`score-${userSelect.value}`).textContent
     const netPoints = Number(userScore) + points
-    console.log(netPoints)
     return netPoints > 0 ? 0 : Math.abs(netPoints)
 }
 
-async function postAction(points, action) {
+async function postAction(id, action, points) {
+    console.log(`Posting ${action} for ${points}`)
     if (missingPoints(points) > 0) {
         showNotEnoughPointsModal(`You need ${missingPoints(points)} more points for selected reward.`);
         return;
     }
 
     try {
+        const actionData = {
+            "user": userSelect.value,
+            "actionType": id,
+            "name": action,
+            "points": points
+        }
+
+        console.log(actionData)
         const response = await fetch("/action/add", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                "name": action,
-                "user": userSelect.value,
-                "points": points
-            })
+            body: JSON.stringify(actionData)
         });
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
@@ -90,30 +95,14 @@ document.getElementById('popupBtn').addEventListener('click', function () {
 });
 
 // Event listeners for each action button
-document.getElementById("applyBtn").addEventListener("click", function () {
-    postAction(25, "Applied to a Job");
-});
-
-document.getElementById("linkedinBtn").addEventListener("click", function () {
-    postAction(10, "Reached Out on LinkedIn");
-});
-
-document.getElementById("coverLetterBtn").addEventListener("click", function () {
-    postAction(10, "Wrote a Cover Letter");
-});
-
-document.getElementById("resumeBtn").addEventListener("click", function () {
-    postAction(5, "Fixed Up Resume");
-});
-
-// Spending points functions
-document.getElementById("sweetTreatBtn").addEventListener("click", function () {
-    postAction(-100, "Got a sweet treat")
-});
-
-document.getElementById("buySomethingBtn").addEventListener("click", function () {
-    postAction(-250, "Bought something nice")
-});
+const actionButtons = document.getElementsByClassName("action-type")
+for(let i = 0; i < actionButtons.length; i++){
+    let actionButton = actionButtons[i]
+    actionButton.addEventListener("click", function () {
+        console.log(`${actionButton.dataset.name} button clicked`)
+        postAction(actionButton.id, actionButton.dataset.name, parseInt(actionButton.dataset.points));
+    });   
+}
 
 /*
     // Track if 100 point pop-up has been shown for each user
@@ -129,16 +118,16 @@ document.getElementById("buySomethingBtn").addEventListener("click", function ()
     };
 
     // Show the pop-up message
-function showPopup(message, dollarAmount) {
-    let popup = document.getElementById('popup');
-    let popupMessage = document.getElementById('popupMessage');
-    let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
+    function showPopup(message, dollarAmount) {
+        let popup = document.getElementById('popup');
+        let popupMessage = document.getElementById('popupMessage');
+        let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
 
-    popupMessage.textContent = message;
-    if (dollarAmount) {
-        dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
-    }
-    popup.style.display = 'flex';
+        popupMessage.textContent = message;
+        if (dollarAmount) {
+            dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
+        }
+        popup.style.display = 'flex';
     }
 
     // Function to update score and show pop-up
@@ -162,33 +151,5 @@ function showPopup(message, dollarAmount) {
             popupShown[user][250] = true;
         }
     }
-
-
-    function subtractPoints(points, action) {
-        const user = userSelect.value;
-
-        if (scores[user] >= points) {
-            scores[user] -= points; // Deduct points
-
-            // Reset flags based on next message to be shown
-            if (scores[user] < 250) {
-                popupShown[user][250] = false
-            }
-            if (scores[user] < 100) {
-                popupShown[user][100] = false
-            }
-
-            updateScoreboard();
-
-            // Add to history list
-            const listItem = document.createElement("li");
-            listItem.textContent = `${user}: ${action} (${getCurrentDate()})`;
-            historyList.prepend(listItem);
-        } else {
-            const missingPoints = points - scores[user]
-            showNotEnoughPointsModal(`You need ${missingPoints} more points for selected reward.`);
-        }
-    }
-
 });
 */

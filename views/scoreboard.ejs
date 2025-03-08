@@ -12,7 +12,7 @@
     <div class="wrapper">
         <!-- Sidebar Scoreboard -->
         <aside class="scoreboard">
-            <h2>🏆 Leaderboard</h2>
+            <h2>🏆 Status</h2>
             <ul id="scoreList">
                 <% for (let i = 0; i < users.length; i++){ %>
                 <li data-user="<%= users[i].name %>">
@@ -30,7 +30,7 @@
 
         <!-- Main Content -->
         <main class="content">
-            <h1>🎮 Job Hunt XP Tracker</h1>
+            <h1>Job Search Buddy</h1>
 
             <!-- User Selector -->
             <div class="user-selector">
@@ -44,34 +44,28 @@
 
             <!-- Action Buttons -->
             <div class="buttons">
-                <button id="applyBtn" class="game-button">
-                    Applied to a Job
-                    <span class="point-value">+25 XP</span>
-                </button>
-                <button id="linkedinBtn" class="game-button">
-                    Messaged Someone on LinkedIn
-                    <span class="point-value">+10 XP</span>
-                </button>
-                <button id="coverLetterBtn" class="game-button">
-                    Wrote a Cover Letter
-                    <span class="point-value">+10 XP</span>
-                </button>
-                <button id="resumeBtn" class="game-button">
-                    Fixed Up Resume
-                    <span class="point-value">+5 XP</span>
-                </button>
+                <% actionTypes.filter(actionType => actionType.points > 0).forEach(actionType => { %>
+                    <button id="<%= actionType._id %>" 
+                        class="earn-button action-type"
+                        data-name="<%= actionType.name %>"
+                        data-points="<%= actionType.points %>">
+                        <%= actionType.name %>
+                        <span class="point-value">+<%= actionType.points %> XP</span>
+                    </button>
+                <% }) %>
             </div>
 
             <!-- Spending Points Buttons -->
             <div class="spend-buttons">
-                <button id="sweetTreatBtn" class="spend-button">
-                    Got a Sweet Treat
-                    <span class="point-value">-100 XP</span>
-                </button>
-                <button id="buySomethingBtn" class="spend-button">
-                    Bought Something Nice
-                    <span class="point-value">-250 XP</span>
-                </button>
+                <% actionTypes.filter(actionType => actionType.points < 0).forEach(actionType => { %>
+                    <button id="<%= actionType._id %>" 
+                        class="spend-button action-type"
+                        data-name="<%= actionType.name %>"
+                        data-points="<%= actionType.points %>">
+                        <%= actionType.name %>
+                        <span class="point-value"><%= actionType.points %> XP</span>
+                    </button>
+                <% }) %>
             </div>
 
             <!-- History -->

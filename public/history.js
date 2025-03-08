@@ -4,19 +4,22 @@ const addOldActionForm = document.getElementById("addOldActionForm");
 const oldActionSelect = document.getElementById("oldActionName");
 const oldActionDate = document.getElementById("oldActionDate");
 
-async function postOldAction(user, action, date) {
+async function postOldAction(user, actionId, action, date) {
     try {
+        const actionData = {
+            "name": action,
+            "actionType": actionId,
+            "user": user,
+            "date": date, // Include the custom date
+            "points": getPointsForAction(action) // Helper function to determine points
+        }
+        console.log(actionData)
         const response = await fetch("/action/add", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                "name": action,
-                "user": user,
-                "date": date, // Include the custom date
-                "points": getPointsForAction(action) // Helper function to determine points
-            })
+            body: JSON.stringify(actionData)
         });
         
         if (!response.ok) {
@@ -33,15 +36,13 @@ async function postOldAction(user, action, date) {
 
 // Helper function to determine points based on action type
 function getPointsForAction(action) {
-    const pointsMap = {
-        "Applied to a Job": 25,
-        "Reached Out on LinkedIn": 10,
-        "Wrote a Cover Letter": 10,
-        "Fixed Up Resume": 5,
-        "Got a sweet treat": -100,
-        "Bought something nice": -250
-    };
-    return pointsMap[action] || 0;
+    const actionTypes = document.getElementsByClassName("action-type-option")
+    for (let i = 0; i < actionTypes.length; i++){
+        if (actionTypes[i].value === action){
+            return actionTypes[i].dataset.points
+        }
+    }
+    return 0;
 }
 
 // Form submission handler
@@ -50,10 +51,11 @@ addOldActionForm.addEventListener("submit", (e) => {
 
     const selectedUser = oldUserSelect.value;
     const selectedAction = oldActionSelect.value;
+    const selectedActionId = oldActionSelect.options[oldActionSelect.selectedIndex].dataset.id;
     const selectedDate = oldActionDate.value;
     
     if (selectedAction && selectedDate) {
-        postOldAction(selectedUser, selectedAction, selectedDate);
+        postOldAction(selectedUser, selectedActionId, selectedAction, selectedDate);
     }
 });
 

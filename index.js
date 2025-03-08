@@ -28,11 +28,17 @@ app.use((req, res, next) => {
 })
 
 const actionSchema = new Schema({
+    actionType: { type: Schema.Types.ObjectId, ref: 'ActionType', required: true },
     name: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     points: { type: Number, default: 0 },
     date: { type: Date, default: Date.now },
     formattedDate: { type: String }
+});
+
+const actionTypeSchema = new Schema({
+    name: { type: String, required: true },
+    points: { type: Number, default: 0 }
 });
 
 const userSchema = new Schema({
@@ -41,11 +47,19 @@ const userSchema = new Schema({
 
 const User = model('User', userSchema);
 const Action = model('Action', actionSchema);
+const ActionType = model('ActionType', actionTypeSchema)
 
 function formatDate(date) {
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const year = date.getFullYear().toString().slice(-2);
+    // Check if date is a string and parse it
+    if (typeof date === 'string') {
+        date = new Date(date);
+    }
+    // Use UTC methods to avoid timezone issues
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    const year = date.getUTCFullYear().toString().slice(-2);
+    
+    console.log(date, `${month}/${day}/${year}`)
     return `${month}/${day}/${year}`;
 }
 
@@ -72,7 +86,11 @@ async function getUsersWithPoints() {
 app.get("/", async function (req, res) {
     const data = {
         users: await getUsersWithPoints(),
-        actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
+        actionTypes: await ActionType.find(),
+        actions: await Action.find()
+        .sort({ date: -1 })
+        .limit(8)
+        .populate("user")
     }
     res.render("scoreboard.ejs", data)
 })
@@ -99,13 +117,15 @@ app.get("/actions", async function (req, res) {
 })
 
 app.post("/action/add", async function (req, res) {
-    console.log(`Posting ${req.body.name} for ${req.body.user}`)
     let actionDate = req.body.date ? new Date(req.body.date) : new Date();
-    const user = await User.findOne({ name: req.body.user })
+    console.log(`Posting ${req.body.name} for ${req.body.user} on ${actionDate}`)
 
+    const user = await User.findOne({ name: req.body.user })
+    
     const newAction = new Action({
         name: req.body.name,
         user: user._id,
+        actionType: req.body.actionType,
         points: Number(req.body.points),
         date: actionDate,
         formattedDate: formatDate(actionDate)
@@ -137,7 +157,7 @@ app.delete('/action/delete/:id', async (req, res) => {
 app.get("/history", async function (req, res) {
     const data = {
         users: await User.find(),
-        actionTypes: ["Applied to a Job", "Messaged Someone on LinkedIn", "Wrote a Cover Letter", "Fixed Up Resume"],
+        actionTypes: await ActionType.find(),
         actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
     }
     res.render("history.ejs", data)

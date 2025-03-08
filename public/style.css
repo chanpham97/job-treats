@@ -81,7 +81,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-.game-button {
+.earn-button {
     font-family: 'Press Start 2P', cursive;
     font-size: 14px;
     background: #ffcc00;
@@ -106,7 +106,7 @@ h1 {
     margin-top: 4px;
 }
 
-.game-button:hover {
+.earn-button:hover {
     transform: scale(1.1);
     box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
 }
@@ -137,7 +137,7 @@ li {
         flex-direction: column;
         align-items: center;
     }
-    .game-button {
+    .earn-button {
         width: 90%;
         height: auto;
     }
