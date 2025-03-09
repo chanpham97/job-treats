@@ -42,7 +42,8 @@ const actionTypeSchema = new Schema({
 });
 
 const userSchema = new Schema({
-    name: { type: String, required: true, unique: true }
+    name: { type: String, required: true, unique: true },
+    weeklyGoal: { type: Number }
 });
 
 const User = model('User', userSchema);
@@ -59,11 +60,27 @@ function formatDate(date) {
     const day = date.getUTCDate().toString().padStart(2, "0");
     const year = date.getUTCFullYear().toString().slice(-2);
     
-    console.log(date, `${month}/${day}/${year}`)
+    // console.log(date, `${month}/${day}/${year}`)
     return `${month}/${day}/${year}`;
 }
 
 async function getUsersWithPoints() {
+    // Calculate current week's Sunday boundaries
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    
+    // Calculate last Sunday (start of week)
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - currentDay);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    // Calculate next Sunday (end of week)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    endOfWeek.setHours(23, 59, 59, 999);
+    
+    console.log(startOfWeek, endOfWeek)
+
     return User.aggregate([
         {
             $lookup: {
@@ -77,6 +94,30 @@ async function getUsersWithPoints() {
             $addFields: {
                 experiencePoints: {
                     $sum: '$actions.points'
+                },
+                // Add new weeklyPoints calculation
+                weeklyPoints: {
+                    $sum: {
+                        $map: {
+                            input: {
+                                $filter: {
+                                    input: '$actions',
+                                    as: 'action',
+                                    cond: {
+                                        $and: [
+                                            // Only include actions from current week
+                                            { $gte: ['$$action.date', startOfWeek] },
+                                            { $lt: ['$$action.date', endOfWeek] },
+                                            // Only include positive points
+                                            { $gt: ['$$action.points', 0] }
+                                        ]
+                                    }
+                                }
+                            },
+                            as: 'weeklyAction',
+                            in: '$$weeklyAction.points'
+                        }
+                    }
                 }
             }
         }
@@ -92,6 +133,7 @@ app.get("/", async function (req, res) {
         .limit(8)
         .populate("user")
     }
+    console.log(data.users)
     res.render("scoreboard.ejs", data)
 })
 

@@ -18,10 +18,18 @@
                 <li data-user="<%= users[i].name %>">
                     <%= users[i].name %>: <span class="user-score" id="score-<%= users[i].name %>"><%= users[i].experiencePoints %></span> XP
                 </li>
+                <% if (users[i].weeklyGoal) { %>
+                <div class="weekly-progress">
+                    <p>Weekly Goal</p>                 
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: <%= Math.min(100, (users[i].weeklyPoints / users[i].weeklyGoal) * 100) %>%"></div>
+                    </div>
+                    <p class="progress-percentage"><%= users[i].weeklyPoints %> / <%= users[i].weeklyGoal %> XP</p>
+                </div>
+                <% } %>
                 <% } %>
             </ul>
-
-            <!-- Add User Section (Inside Scoreboard) -->
+            <!-- Add User Section -->
             <div class="add-user">
                 <input type="text" id="newUserInput" placeholder="Enter name">
                 <button id="addUserBtn">Add User</button>
