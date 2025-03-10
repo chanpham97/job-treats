@@ -126,7 +126,7 @@ async function getUsersWithPoints() {
 
 app.get("/", async function (req, res) {
     const data = {
-        users: await getUsersWithPoints(),
+        users: await getUsersWithPoints({}),
         actionTypes: await ActionType.find(),
         actions: await Action.find()
         .sort({ date: -1 })
@@ -203,6 +203,17 @@ app.get("/history", async function (req, res) {
         actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
     }
     res.render("history.ejs", data)
+})
+
+app.get("/profile/:name", async function (req, res) {
+    const userData = await User.findOne({name: req.params.name})
+    userData["joinDate"] = formatDate(userData._id.getTimestamp())
+    const data = {
+        user: userData,
+        actions: await Action.find({user: userData._id}).sort({ date: -1 })
+    }
+    console.log(data)
+    res.render("profile.ejs", data)
 })
 
 const PORT = process.env.PORT || 3000;

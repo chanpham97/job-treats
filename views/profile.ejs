@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=user.name%>'s Profile</title>
+    <link rel="stylesheet" href="/profile.css">
+</head>
+
+<body>
+    <div class="profile-container">
+        <!-- Left Column -->
+        <div class="profile-left">
+            <div class="user-info">
+                <h2><%= user.name %></h2>
+                <p>Joined <%= user.joinDate %></p>
+            </div>
+            <div class="user-goal">
+                <h3>Weekly Goal</h3>
+                <p><%=user.weeklyGoal%> XP</p>
+                <button class="edit-button">Edit</button>
+            </div>
+
+            <!-- Achievements -->
+            <div class="achievements">
+                <h3>Achievements</h3>
+                <div class="badge-container">
+                    <div class="badge">
+                        <div class="badge-icon">🍪</div>
+                        <div class="badge-text">Joined Job Treats</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Full Action History -->
+        <div class="profile-right">
+            <h2>Action History</h2>
+            <div id="action-history"></div>
+
+            <div class="pagination">
+                <button id="prevPage" class="page-button">Previous</button>
+                <span id="pageNumber">Page 1</span>
+                <button id="nextPage" class="page-button">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Go Back Home Button -->
+    <div class="home-button-container">
+        <a href="/" class="game-button home-button">Back to Home</a>
+    </div>
+
+    <script src="/profile.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const actions = <%- JSON.stringify(actions) %>;
+            setupPagination(actions); 
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #1e1e2e;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Profile Container */
+.profile-container {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Left Column */
+.profile-left {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* User Info & Achievements (Same Background) */
+.user-info, .user-goal, .achievements {
+    background: #44475a; /* Matching background color */
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+    color: #ffcc00;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+button {
+    font-family: 'Press Start 2P', cursive;
+}
+
+.edit-button {
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.edit-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+/* Achievements */
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Rounded Square Badges */
+.badge {
+    width: 80px;
+    height: 80px;
+    background: #c0faff;
+    color: #1e1e2e;
+    border-radius: 10px; /* Rounded square */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.badge-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.badge-text {
+    font-size: 10px;
+    text-align: center;
+}
+
+/* Right Column - Action History */
+.profile-right {
+    flex-grow: 1;
+    background: #222;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #ffcc00;
+    margin-bottom: 15px;
+}
+
+/* Action History List */
+.action-history {
+    list-style: none;
+    padding: 0;
+}
+
+.action-item {
+    background: #44475a;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #ffcc00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.page-button {
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.page-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+.page-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* Home Button */
+.home-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.home-button-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.home-button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    background: #ffcc00;
+    color: #1e1e2e;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}

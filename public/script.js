@@ -104,6 +104,16 @@ for(let i = 0; i < actionButtons.length; i++){
     });   
 }
 
+// Event listeners for user profile buttons
+const userLinks = document.querySelectorAll(".scoreboard li")
+for(let i = 0; i < userLinks.length; i++){
+    let userLink = userLinks[i]
+    userLink.addEventListener("click", () => {
+        const userName = userLink.dataset.user;
+        window.location.href = `/profile/${(userName)}`;
+    });
+};
+
 /*
     // Track if 100 point pop-up has been shown for each user
     let popupShown = {
