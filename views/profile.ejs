@@ -34,6 +34,7 @@
         <!-- Right Column - Full Action History -->
         <div class="profile-right">
             <h2>Action History</h2>
+            <% if (actions && actions.length> 0) { %>
             <div id="action-history"></div>
 
             <div class="pagination">
@@ -41,6 +42,12 @@
                 <span id="pageNumber">Page 1</span>
                 <button id="nextPage" class="page-button">Next</button>
             </div>
+            <% } else { %>
+                <div class="no-actions-message">
+                    <p>There are no actions so far.</p>
+                    <p>Encourage <%= user.name %> to take their first action!</p>
+                </div>
+            <% } %>
         </div>
     </div>
 

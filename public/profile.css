@@ -163,6 +163,13 @@ h2 {
     text-align: center;
 }
 
+.no-actions-message {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcc00;
+}
+
 /* Pagination */
 .pagination {
     display: flex;
