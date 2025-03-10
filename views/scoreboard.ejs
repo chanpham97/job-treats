@@ -14,17 +14,24 @@
         <aside class="scoreboard">
             <h2>🏆 Status</h2>
             <ul id="scoreList">
-                <% for (let i = 0; i < users.length; i++){ %>
-                <li data-user="<%= users[i].name %>">
-                    <%= users[i].name %>: <span class="user-score" id="score-<%= users[i].name %>"><%= users[i].experiencePoints %></span> XP
+                <% let usersByPoints = users.sort((a, b)=>b.experiencePoints - a.experiencePoints) %>
+                <% for (let i = 0; i < usersByPoints.length; i++){ %>
+                <li data-user="<%= usersByPoints[i].name %>">
+                    <%= usersByPoints[i].name %>: 
+                    <span 
+                        class="user-score" 
+                        id="score-<%= usersByPoints[i].name %>" 
+                        data-spending="<%= usersByPoints[i].spendingPoints %>">
+                        <%= usersByPoints[i].experiencePoints %>
+                    </span> XP
                 </li>
-                <% if (users[i].weeklyGoal) { %>
+                <% if (usersByPoints[i].weeklyGoal) { %>
                 <div class="weekly-progress">
                     <p>Weekly Goal</p>                 
                     <div class="progress-container">
-                        <div class="progress-bar" style="width: <%= Math.min(100, (users[i].weeklyPoints / users[i].weeklyGoal) * 100) %>%"></div>
+                        <div class="progress-bar" style="width: <%= Math.min(100, (usersByPoints[i].weeklyPoints / usersByPoints[i].weeklyGoal) * 100) %>%"></div>
                     </div>
-                    <p class="progress-percentage"><%= users[i].weeklyPoints %> / <%= users[i].weeklyGoal %> XP</p>
+                    <p class="progress-percentage"><%= usersByPoints[i].weeklyPoints %> / <%= users[i].weeklyGoal %> XP</p>
                 </div>
                 <% } %>
                 <% } %>
@@ -43,9 +50,11 @@
             <!-- User Selector -->
             <div class="user-selector">
                 <label for="userSelect">Select User:</label>
+                <% let usersByName = users.sort((a, b) => a.name.localeCompare(b.name)) %>
                 <select id="userSelect">
-                    <% for (let i = 0; i < users.length; i++){ %>
-                    <option value="<%= users[i].name %>"><%= users[i].name %></option>
+                    <option disabled selected></option>
+                    <% for (let i = 0; i < usersByName.length; i++){ %>
+                    <option value="<%= usersByName[i].name %>"><%= usersByName[i].name %></option>
                     <% } %>
                 </select>
             </div>

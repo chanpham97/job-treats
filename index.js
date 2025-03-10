@@ -79,8 +79,6 @@ async function getUsersWithPoints() {
     endOfWeek.setDate(startOfWeek.getDate() + 7);
     endOfWeek.setHours(23, 59, 59, 999);
     
-    console.log(startOfWeek, endOfWeek)
-
     return User.aggregate([
         {
             $lookup: {
@@ -92,8 +90,21 @@ async function getUsersWithPoints() {
         },
         {
             $addFields: {
+                // Experience points - only positive points
                 experiencePoints: {
-                    $sum: '$actions.points'
+                    $sum: {
+                        $map: {
+                            input: {
+                                $filter: {
+                                    input: '$actions',
+                                    as: 'action',
+                                    cond: { $gt: ['$$action.points', 0] }
+                                }
+                            },
+                            as: 'positiveAction',
+                            in: '$$positiveAction.points'
+                        }
+                    }
                 },
                 // Add new weeklyPoints calculation
                 weeklyPoints: {
@@ -121,7 +132,7 @@ async function getUsersWithPoints() {
                 }
             }
         }
-    ]);
+    ])
 }
 
 app.get("/", async function (req, res) {
@@ -130,10 +141,10 @@ app.get("/", async function (req, res) {
         actionTypes: await ActionType.find(),
         actions: await Action.find()
         .sort({ date: -1 })
-        .limit(8)
+        .limit(5)
         .populate("user")
     }
-    console.log(data.users)
+    // console.log(data.users)
     res.render("scoreboard.ejs", data)
 })
 

@@ -34,7 +34,7 @@ addUserBtn.addEventListener("click", () => {
 function missingPoints(points) {
     if (points > 0) return 0
 
-    const userScore = document.getElementById(`score-${userSelect.value}`).textContent
+    const userScore = document.getElementById(`score-${userSelect.value}`).dataset.spendingPoints
     const netPoints = Number(userScore) + points
     return netPoints > 0 ? 0 : Math.abs(netPoints)
 }
