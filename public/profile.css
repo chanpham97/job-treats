@@ -27,7 +27,7 @@ body {
 }
 
 /* User Info & Achievements (Same Background) */
-.user-info, .user-goal, .achievements {
+.user-info, .achievements {
     background: #44475a; /* Matching background color */
     padding: 20px;
     border-radius: 15px;
@@ -58,6 +58,41 @@ button {
 .edit-button:hover {
     transform: scale(1.1);
     box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+}
+
+.user-info input {
+    width: 40%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#cancel-button {
+    background-color: #ccc;
+    color: black;
+}
+
+#cancel-button:hover {
+    background-color: #999;
 }
 
 /* Achievements */
