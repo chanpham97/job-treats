@@ -154,6 +154,28 @@ app.post("/user/add", async function (req, res) {
     }
 })
 
+app.patch("/user/update", async function (req, res) {
+    try {
+        const user = await User.findOneAndUpdate(
+            { name: req.body.originalName },
+            { 
+                $set: { 
+                    name: req.body.updatedName,
+                    weeklyGoal: req.body.weeklyGoal
+                }
+            },
+            { 
+                new: true,
+                runValidators: true
+            }
+        );
+        res.json(user)
+    } catch (error) {
+        console.error(error.message);
+    }
+})
+
+
 app.get("/actions", async function (req, res) {
     res.json(await Action.find().sort({ date: -1 }).populate("user"))
 })

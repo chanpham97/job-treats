@@ -13,12 +13,9 @@
         <!-- Left Column -->
         <div class="profile-left">
             <div class="user-info">
-                <h2><%= user.name %></h2>
+                <h2 id="user-name"><%= user.name %></h2>
                 <p>Joined <%= user.joinDate %></p>
-            </div>
-            <div class="user-goal">
-                <h3>Weekly Goal</h3>
-                <p><%=user.weeklyGoal%> XP</p>
+                <p>Weekly Goal: <span id="user-goal"><%= user.weeklyGoal %></span> XP</p>
                 <button class="edit-button">Edit</button>
             </div>
 
