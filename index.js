@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 const app = express()
 
 try {
-    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/jobtreat?retryWrites=true&w=majority&appName=Cluster0`)
+    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/jobtreat${process.env.DB_ENV}?retryWrites=true&w=majority&appName=Cluster0`)
     console.log("Connected to MongoDB")
 } catch (error) {
     console.log(error)
