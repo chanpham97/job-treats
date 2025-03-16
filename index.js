@@ -43,12 +43,27 @@ const actionTypeSchema = new Schema({
 
 const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
-    weeklyGoal: { type: Number }
+    weeklyGoal: { type: Number },
+    earnedTreats: [{
+        treat: { type: mongoose.Schema.Types.ObjectId, ref: 'Treat' },
+        earnedAt: { type: Date, default: Date.now },
+        weekOf: Date,
+        redeemed: { type: Boolean, default: false }
+      }]
 });
+
+const treatSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    category: { type: String, enum: ['weekly', 'lifetime'] },
+    points: Number,
+    icon: String
+  });
+  
 
 const User = model('User', userSchema);
 const Action = model('Action', actionSchema);
 const ActionType = model('ActionType', actionTypeSchema)
+const Treat = model('Treat', treatSchema)
 
 function formatDate(date) {
     // Check if date is a string and parse it
@@ -137,8 +152,8 @@ async function getUsersWithPoints() {
 
 app.get("/", async function (req, res) {
     const data = {
-        users: await getUsersWithPoints({}),
-        actionTypes: await ActionType.find(),
+        users: await getUsersWithPoints(),
+        actionTypes: await ActionType.find().sort({ points: -1 }),
         actions: await Action.find()
         .sort({ date: -1 })
         .limit(5)

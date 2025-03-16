@@ -72,19 +72,6 @@
                 <% }) %>
             </div>
 
-            <!-- Spending Points Buttons -->
-            <div class="spend-buttons">
-                <% actionTypes.filter(actionType => actionType.points < 0).forEach(actionType => { %>
-                    <button id="<%= actionType._id %>" 
-                        class="spend-button action-type"
-                        data-name="<%= actionType.name %>"
-                        data-points="<%= actionType.points %>">
-                        <%= actionType.name %>
-                        <span class="point-value"><%= actionType.points %> XP</span>
-                    </button>
-                <% }) %>
-            </div>
-
             <!-- History -->
             <div class="history">
                 <h2>📅 Recent Actions</h2>
