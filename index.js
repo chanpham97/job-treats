@@ -47,18 +47,17 @@ const userSchema = new Schema({
     earnedTreats: [{
         treat: { type: Schema.Types.ObjectId, ref: 'Treat' },
         earnedAt: { type: Date, default: Date.now },
-        weekOf: Date,
-        redeemed: { type: Boolean, default: false }
-      }]
+        weekOf: { type: Date, required: true }
+    }]
 });
 
 const treatSchema = new Schema({
     name: { type: String, required: true },
-    category: { type: String, enum: ['weekly', 'lifetime'] },
-    points: Number,
+    category: { type: String, enum: ['weekly', 'total'] },
+    pointsRequired: Number,
     icon: String
-  });
-  
+});
+
 
 const User = model('User', userSchema);
 const Action = model('Action', actionSchema);
@@ -74,26 +73,27 @@ function formatDate(date) {
     const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
     const day = date.getUTCDate().toString().padStart(2, "0");
     const year = date.getUTCFullYear().toString().slice(-2);
-    
+
     // console.log(date, `${month}/${day}/${year}`)
     return `${month}/${day}/${year}`;
 }
 
-async function getUsersWithPoints() {
-    // Calculate current week's Sunday boundaries
-    const now = new Date();
-    const currentDay = now.getDay(); // 0 for Sunday, 1 for Monday, etc.
-    
-    // Calculate last Sunday (start of week)
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - currentDay);
+function getStartOfWeek(date) {
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
-    
-    // Calculate next Sunday (end of week)
+    return startOfWeek
+}
+
+function getEndOfWeek(date) {
+    const startOfWeek = getStartOfWeek(date)
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 7);
     endOfWeek.setHours(23, 59, 59, 999);
-    
+    return endOfWeek
+}
+
+async function getUsersForScoreboard() {
     return User.aggregate([
         {
             $lookup: {
@@ -131,9 +131,8 @@ async function getUsersWithPoints() {
                                     cond: {
                                         $and: [
                                             // Only include actions from current week
-                                            { $gte: ['$$action.date', startOfWeek] },
-                                            { $lt: ['$$action.date', endOfWeek] },
-                                            // Only include positive points
+                                            { $gte: ['$$action.date', getStartOfWeek(new Date())] },
+                                            { $lt: ['$$action.date', getEndOfWeek(new Date())] },
                                             { $gt: ['$$action.points', 0] }
                                         ]
                                     }
@@ -145,18 +144,80 @@ async function getUsersWithPoints() {
                     }
                 }
             }
+        },
+        {
+            $lookup: {
+                from: 'treats',
+                localField: 'earnedTreats.treat',
+                foreignField: '_id',
+                as: 'treatObjects'
+            }
+        },
+        // Add weekly treats field
+        {
+            $addFields: {
+                weeklyTreats: {
+                    $map: {
+                        input: {
+                            $filter: {
+                                input: '$earnedTreats',
+                                as: 'earned',
+                                cond: {
+                                    $eq: [
+                                        { $dateToString: { format: '%Y-%m-%d', date: '$$earned.weekOf' } },
+                                        { $dateToString: { format: '%Y-%m-%d', date: getStartOfWeek(new Date()) } }
+                                    ]
+                                }
+                            }
+                        },
+                        as: 'weeklyEarned',
+                        in: {
+                            $mergeObjects: [
+                                '$$weeklyEarned',
+                                {
+                                    treatDetails: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: '$treatObjects',
+                                                    as: 'treatObj',
+                                                    cond: { $eq: ['$$treatObj._id', '$$weeklyEarned.treat'] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        // Project only the fields we need
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                weeklyGoal: 1,
+                experiencePoints: 1,
+                weeklyPoints: 1,
+                weeklyTreats: 1
+            }
         }
     ])
 }
 
 app.get("/", async function (req, res) {
+    const userData = await getUsersForScoreboard()
+    console.log(userData)
     const data = {
-        users: await getUsersWithPoints(),
+        users: userData,
         actionTypes: await ActionType.find().sort({ points: -1 }),
         actions: await Action.find()
-        .sort({ date: -1 })
-        .limit(5)
-        .populate("user")
+            .sort({ date: -1 })
+            .limit(5)
+            .populate("user")
     }
     // console.log(data.users)
     res.render("scoreboard.ejs", data)
@@ -183,13 +244,13 @@ app.patch("/user/update", async function (req, res) {
     try {
         const user = await User.findOneAndUpdate(
             { name: req.body.originalName },
-            { 
-                $set: { 
+            {
+                $set: {
                     name: req.body.updatedName,
                     weeklyGoal: req.body.weeklyGoal
                 }
             },
-            { 
+            {
                 new: true,
                 runValidators: true
             }
@@ -210,7 +271,7 @@ app.post("/action/add", async function (req, res) {
     console.log(`Posting ${req.body.name} for ${req.body.user} on ${actionDate}`)
 
     const user = await User.findOne({ name: req.body.user })
-    
+
     const newAction = new Action({
         name: req.body.name,
         user: user._id,
@@ -253,14 +314,57 @@ app.get("/history", async function (req, res) {
 })
 
 app.get("/profile/:name", async function (req, res) {
-    const userData = await User.findOne({name: req.params.name})
+    const userData = await User.findOne({ name: req.params.name })
     userData["joinDate"] = formatDate(userData._id.getTimestamp())
     const data = {
         user: userData,
-        actions: await Action.find({user: userData._id}).sort({ date: -1 })
+        actions: await Action.find({ user: userData._id }).sort({ date: -1 })
     }
     console.log(data)
     res.render("profile.ejs", data)
+})
+
+app.get("/treats/weekly", async function (req, res) {
+    res.json(await Treat.find({ category: 'weekly' }))
+})
+
+app.patch("/treats/user-add", async function (req, res) {
+    const { userId, treatId } = req.body;
+
+    const user = await User.findById(userId).populate('earnedTreats')
+    if (!user) {
+        return res.status(404).send(`User with ID ${userId} not found`);
+    }
+
+    const treat = await Treat.findById(treatId);
+    if (!treat) {
+        return res.status(404).send(`Treat with ID ${treatId} not found`);
+    }
+
+    const now = new Date();
+    const weekOf = getStartOfWeek(now);
+
+    const existingTreat = user.earnedTreats.find(earned =>
+        earned.treat.toString() === treatId &&
+        new Date(earned.weekOf).toDateString() === weekOf.toDateString()
+    );
+
+    if (existingTreat) {
+        return res.status(409).send('User already has this treat for the current week');
+    }
+
+    user.earnedTreats.push({
+        treat: treatId,
+        earnedAt: now,
+        weekOf: weekOf
+    });
+
+    try {
+        const response = await user.save()
+        res.json(response)
+    } catch (error) {
+        console.error(error.message);
+    }
 })
 
 const PORT = process.env.PORT || 3000;
