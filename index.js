@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 const app = express()
 
 try {
-    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/jobtreat?retryWrites=true&w=majority&appName=Cluster0`)
+    await connect(`mongodb+srv://iamchanpham:${process.env.DB_PASS}@cluster0.6646g.mongodb.net/jobtreat${process.env.DB_ENV}?retryWrites=true&w=majority&appName=Cluster0`)
     console.log("Connected to MongoDB")
 } catch (error) {
     console.log(error)
@@ -137,7 +137,7 @@ async function getUsersWithPoints() {
 
 app.get("/", async function (req, res) {
     const data = {
-        users: await getUsersWithPoints(),
+        users: await getUsersWithPoints({}),
         actionTypes: await ActionType.find(),
         actions: await Action.find()
         .sort({ date: -1 })
@@ -164,6 +164,28 @@ app.post("/user/add", async function (req, res) {
         console.error(error.message);
     }
 })
+
+app.patch("/user/update", async function (req, res) {
+    try {
+        const user = await User.findOneAndUpdate(
+            { name: req.body.originalName },
+            { 
+                $set: { 
+                    name: req.body.updatedName,
+                    weeklyGoal: req.body.weeklyGoal
+                }
+            },
+            { 
+                new: true,
+                runValidators: true
+            }
+        );
+        res.json(user)
+    } catch (error) {
+        console.error(error.message);
+    }
+})
+
 
 app.get("/actions", async function (req, res) {
     res.json(await Action.find().sort({ date: -1 }).populate("user"))
@@ -214,6 +236,17 @@ app.get("/history", async function (req, res) {
         actions: await Action.find().sort({ date: -1 }).limit(8).populate("user")
     }
     res.render("history.ejs", data)
+})
+
+app.get("/profile/:name", async function (req, res) {
+    const userData = await User.findOne({name: req.params.name})
+    userData["joinDate"] = formatDate(userData._id.getTimestamp())
+    const data = {
+        user: userData,
+        actions: await Action.find({user: userData._id}).sort({ date: -1 })
+    }
+    console.log(data)
+    res.render("profile.ejs", data)
 })
 
 const PORT = process.env.PORT || 3000;

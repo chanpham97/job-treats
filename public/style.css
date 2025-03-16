@@ -41,6 +41,21 @@ body {
     font-size: 14px;
     text-align: center;
     color: #ffcc00;
+    list-style: none;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+/* Hover Effect */
+.scoreboard li:hover {
+    background: #ffcc00;
+    color: #1e1e2e;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(255, 204, 0, 0.5);
+}
+
+/* Active Click Effect */
+.scoreboard li:active {
+    transform: scale(0.98);
 }
 
 /* Main Content */
@@ -371,8 +386,8 @@ li {
     background-color: #f5f5f5;
     border-radius: 8px;
     padding: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
   
 .weekly-progress h3 {
