@@ -45,14 +45,14 @@ const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
     weeklyGoal: { type: Number },
     earnedTreats: [{
-        treat: { type: mongoose.Schema.Types.ObjectId, ref: 'Treat' },
+        treat: { type: Schema.Types.ObjectId, ref: 'Treat' },
         earnedAt: { type: Date, default: Date.now },
         weekOf: Date,
         redeemed: { type: Boolean, default: false }
       }]
 });
 
-const treatSchema = new mongoose.Schema({
+const treatSchema = new Schema({
     name: { type: String, required: true },
     category: { type: String, enum: ['weekly', 'lifetime'] },
     points: Number,
@@ -121,7 +121,6 @@ async function getUsersWithPoints() {
                         }
                     }
                 },
-                // Add new weeklyPoints calculation
                 weeklyPoints: {
                     $sum: {
                         $map: {
