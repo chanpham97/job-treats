@@ -80,6 +80,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
+    // Add click event listeners to all delete buttons
+    document.querySelectorAll('.claim-action').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            if (confirm('Are you sure you want to claim this treat?')) {
+                const name = document.getElementById("user-name").innerText;
+                const treatId = e.target.dataset.id;
+
+                try {
+                    const response = await fetch(`/treats/user-claim/`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            userName: name,
+                            treatId: treatId
+                        })
+
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    window.location.reload(); // This is the one-liner that refreshes the page!
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to claim treat');
+                }
+            }
+
+        });
+    });
+
     // Make the function globally available
     window.setupPagination = setupPagination;
 });
+

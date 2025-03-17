@@ -4,6 +4,8 @@ import { connect, Schema, model } from 'mongoose'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import e from 'express';
+import { exit } from 'process';
 
 dotenv.config()
 const __filename = fileURLToPath(import.meta.url);
@@ -328,7 +330,7 @@ app.get("/profile/:name", async function (req, res) {
         user: userData,
         actions: await Action.find({ user: userData._id }).sort({ date: -1 })
     }
-    console.log(data.user.earnedTreats)
+    // console.log(data.user.earnedTreats)
     res.render("profile.ejs", data)
 })
 
@@ -382,36 +384,24 @@ app.patch("/treats/user-add", async function (req, res) {
 })
 
 app.patch("/treats/user-claim", async function (req, res) {
-    const { userId, treatId } = req.body;
-
-    const user = await User.findById(userId).populate('earnedTreats')
+    const { userName, treatId } = req.body;
+    console.log(`Claiming treat ${treatId} for ${userName}`)
+    const user = await User.findOne({name: userName}).populate('earnedTreats')
     if (!user) {
-        return res.status(404).send(`User with ID ${userId} not found`);
+        return res.status(404).send(`User ${userName} not found`);
+    }
+    console.log(user)
+    const existingTreat = user.earnedTreats.find(earned => earned._id.toString() === treatId);
+    if (!existingTreat) {
+        return res.status(409).send('User does not have earned treat with this ID');
     }
 
-    const treat = await Treat.findById(treatId);
-    if (!treat) {
-        return res.status(404).send(`Treat with ID ${treatId} not found`);
+    console.log(existingTreat)
+    if (existingTreat.redeemed) {
+        return res.status(409).send('User already redeemed this treat');
+    } else {
+        existingTreat.redeemed = true
     }
-
-    const now = new Date();
-    const weekOf = getStartOfWeek(now);
-
-    const existingTreat = user.earnedTreats.find(earned =>
-        earned.treat.toString() === treatId &&
-        new Date(earned.weekOf).toDateString() === weekOf.toDateString()
-    );
-
-    if (existingTreat) {
-        return res.status(409).send('User already has this treat for the current week');
-    }
-
-    user.earnedTreats.push({
-        treatType: treatId,
-        earnedAt: now,
-        weekOf: weekOf,
-        redeemed: false
-    });
 
     try {
         const response = await user.save()
