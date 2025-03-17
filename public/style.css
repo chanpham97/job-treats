@@ -218,92 +218,7 @@ li {
 
 /* Pop-up Styling */
 .popup {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    justify-content: center;
-    align-items: center;
-    font-family: 'Press Start 2P', cursive;
-    color: #ffcc00;
-    z-index: 9999;
-}
-
-.popup-content {
-    background-color: #222;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 80%;
-    max-width: 400px;
-    border: 2px solid #ffcc00;
-}
-
-#popupMessage {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-#popupBtn {
-    background-color: #ffcc00;
-    color: #1e1e2e;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 100px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#popupBtn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
-}
-
-/* Spending Points Buttons */
-.spend-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.spend-button {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 14px;
-    background: #28a745; /* Green background for spending buttons */
-    color: #fff;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 200px;
-    height: 80px;
-    justify-content: center;
-}
-
-.spend-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.5);
-}
-
-.spend-button .point-value {
-    font-size: 10px; /* Smaller font size for point total */
-    margin-top: 4px;
-}
-
-/* Modal Styles */
-.modal {
-    display: none; /* Hidden by default */
+    display: none; 
     position: fixed;
     z-index: 1;
     left: 0;
@@ -317,7 +232,7 @@ li {
     color: white;
 }
 
-.modal-content {
+.popup-content {
     background-color: #333;
     border-radius: 10px;
     padding: 20px;
@@ -325,18 +240,13 @@ li {
     width: 300px;
 }
 
-.modal-content h2 {
+#popupMessage {
     font-size: 18px;
     margin-bottom: 15px;
-    color: red;
+    color: #ffcc00;
 }
 
-.modal-content p {
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.modal-content button {
+#popupBtn {
     font-family: 'Press Start 2P', cursive;
     background-color: #ffcc00;
     color: #1e1e2e;
@@ -347,7 +257,7 @@ li {
     font-size: 14px;
 }
 
-.modal-content button:hover {
+#popupBtn:hover {
     background-color: #ffb900;
 }
 

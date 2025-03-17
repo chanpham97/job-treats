@@ -271,6 +271,9 @@ app.post("/action/add", async function (req, res) {
     console.log(`Posting ${req.body.name} for ${req.body.user} on ${actionDate}`)
 
     const user = await User.findOne({ name: req.body.user })
+    if (!user) {
+        return res.status(404).send(`User not found`);
+    }
 
     const newAction = new Action({
         name: req.body.name,

@@ -67,46 +67,26 @@ async function postAction(id, action, points) {
         }
         const json = await response.json();
         console.log(json);
-        window.location.href = "/"
+
+        checkForTreat(actionData.user, actionData.points)
     } catch (error) {
         console.error(error.message);
     }
 }
 
-// Not Enough Points Modal
-const notEnoughPointsModal = document.getElementById("notEnoughPointsModal");
-const closeNotEnoughPointsBtn = document.getElementById("closeNotEnoughPointsBtn");
-const notEnoughPointsMessage = document.getElementById("notEnoughPointsMessage");
-
-// Show the modal for not enough points
-function showNotEnoughPointsModal(message) {
-    notEnoughPointsMessage.textContent = message;
-    notEnoughPointsModal.style.display = "flex"; // Make sure the modal is visible
-}
-
-// Close the modal
-closeNotEnoughPointsBtn.addEventListener("click", function () {
-    notEnoughPointsModal.style.display = "none";
-});
-
-// Hide the pop-up when the button is clicked
-document.getElementById('popupBtn').addEventListener('click', function () {
-    document.getElementById('popup').style.display = 'none';
-});
-
 // Event listeners for each action button
 const actionButtons = document.getElementsByClassName("action-type")
-for(let i = 0; i < actionButtons.length; i++){
+for (let i = 0; i < actionButtons.length; i++) {
     let actionButton = actionButtons[i]
     actionButton.addEventListener("click", function () {
         console.log(`${actionButton.dataset.name} button clicked`)
         postAction(actionButton.id, actionButton.dataset.name, parseInt(actionButton.dataset.points));
-    });   
+    });
 }
 
 // Event listeners for user profile buttons
 const userLinks = document.querySelectorAll(".scoreboard li")
-for(let i = 0; i < userLinks.length; i++){
+for (let i = 0; i < userLinks.length; i++) {
     let userLink = userLinks[i]
     userLink.addEventListener("click", () => {
         const userName = userLink.dataset.user;
@@ -114,52 +94,56 @@ for(let i = 0; i < userLinks.length; i++){
     });
 };
 
-/*
-    // Track if 100 point pop-up has been shown for each user
-    let popupShown = {
-        "Chan": {
-            100: false,
-            250: false
-        },
-        "Sabina": {
-            100: false,
-            250: false
-        }
-    };
+function showPopup(message) {
+    let popup = document.getElementById('popup');
+    let popupMessage = document.getElementById('popupMessage');
 
-    // Show the pop-up message
-    function showPopup(message, dollarAmount) {
-        let popup = document.getElementById('popup');
-        let popupMessage = document.getElementById('popupMessage');
-        let dollarValue = document.getElementById('dollarValue'); // Get the dollar amount element
+    popupMessage.textContent = message;
+    popup.style.display = 'flex';
+}
 
-        popupMessage.textContent = message;
-        if (dollarAmount) {
-            dollarValue.textContent = dollarAmount; // Set the dollar amount if provided
-        }
-        popup.style.display = 'flex';
-    }
-
-    // Function to update score and show pop-up
-    function addPoints(points, action) {
-        const user = userSelect.value;
-
-        scores[user] += points;
-        updateScoreboard();
-
-        // Add to history list
-        const listItem = document.createElement("li");
-        listItem.textContent = `${user}: ${action} (${getCurrentDate()})`;
-        historyList.prepend(listItem);
-
-        // Check if user has reached 100 or 250 points and show pop-up
-        if (scores[user] >= 100 && scores[user] < 250 && !popupShown[user][100]) {
-            showPopup("You earned a sweet treat!"); // Adding dollar value for 100 points
-            popupShown[user][100] = true; // Set the flag to prevent showing the 100-point pop-up again
-        } else if (scores[user] >= 250 && !popupShown[user][250]) {
-            showPopup("You get to buy yourself something nice!"); // Adding dollar value for 250 points
-            popupShown[user][250] = true;
-        }
-    }
+document.getElementById('popupBtn').addEventListener('click', function () {
+    document.getElementById('popup').style.display = 'none';
+    window.location.reload()
 });
-*/
+
+
+async function checkForTreat(userName, pointsAdded) {
+    const response = await fetch('/treats/weekly');
+    const availableTreats = await response.json();
+    const user = window.appData.users.find(user => user.name === userName);
+    const currentWeeklyPoints = user.weeklyPoints;
+    const newTotalPoints = currentWeeklyPoints + pointsAdded;
+    const earnedTreatIds = user.weeklyTreats ? user.weeklyTreats.map(treat => treat.treat) : [];
+
+    console.log(earnedTreatIds)
+    const newlyEligibleTreats = availableTreats.filter(treat =>
+        newTotalPoints >= treat.requirement && !earnedTreatIds.includes(treat._id)
+    );
+
+    if (newlyEligibleTreats.length === 0) {
+        console.log('No eligible treats')
+        window.location.reload()
+    }
+
+    for (const treat of newlyEligibleTreats) {
+        try {
+            const response = await fetch('/treats/user-add', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: user._id,
+                    treatId: treat._id
+                })
+            });
+            console.log(response)
+            showPopup(`Congratulations! You ${treat.name}`);
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    return true;
+}

@@ -95,22 +95,17 @@
         <div id="popup" class="popup">
             <div class="popup-content">
                 <p id="popupMessage"></p>
-                <p id="dollarValue" class="dollar-value"></p> <!-- Added the small dollar value text -->
                 <button id="popupBtn" class="close-btn">Close</button>
             </div>
         </div>
-        <!-- Not Enough Points Modal -->
-        <div id="notEnoughPointsModal" class="modal">
-            <div class="modal-content">
-                <h2>Oops!</h2>
-                <p id="notEnoughPointsMessage"></p>
-                <button id="closeNotEnoughPointsBtn">Close</button>
-            </div>
-        </div>
-
     </div>
-
+    <script>
+        window.appData = {
+            users: <%- JSON.stringify(users) %>
+        };
+    </script>
     <script src="script.js"></script>
+
 </body>
 
 </html>
