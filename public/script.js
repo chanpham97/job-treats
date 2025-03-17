@@ -118,7 +118,7 @@ async function checkForTreat(userName, pointsAdded) {
 
     console.log(earnedTreatIds)
     const newlyEligibleTreats = availableTreats.filter(treat =>
-        newTotalPoints >= treat.requirement && !earnedTreatIds.includes(treat._id)
+        newTotalPoints >= treat.pointsRequired && !earnedTreatIds.includes(treat._id)
     );
 
     if (newlyEligibleTreats.length === 0) {
@@ -139,7 +139,7 @@ async function checkForTreat(userName, pointsAdded) {
                 })
             });
             console.log(response)
-            showPopup(`Congratulations! You ${treat.name}`);
+            showPopup(`You earned a ${treat.name}`);
         } catch(error) {
             console.log(error)
         }

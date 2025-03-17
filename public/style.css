@@ -218,7 +218,7 @@ li {
 
 /* Pop-up Styling */
 .popup {
-    display: none; 
+    display: none; /* Hidden by default */
     position: fixed;
     z-index: 1;
     left: 0;
@@ -240,10 +240,31 @@ li {
     width: 300px;
 }
 
-#popupMessage {
+.popup-content h2 {
     font-size: 18px;
     margin-bottom: 15px;
     color: #ffcc00;
+}
+
+.popup-content p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.popup-content button {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.popup-content button:hover {
+    background-color: #ffb900;
 }
 
 #popupBtn {
