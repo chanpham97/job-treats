@@ -13,8 +13,8 @@ body {
 /* Profile Container */
 .profile-container {
     display: flex;
-    width: 80%;
-    max-width: 1200px;
+    width: 95%;
+    /* max-width: 1200px; */
     gap: 20px;
 }
 
@@ -27,12 +27,46 @@ body {
 }
 
 /* User Info & Achievements (Same Background) */
-.user-info, .achievements {
+.user-info, .achievements, .weekly {
     background: #44475a; /* Matching background color */
     padding: 20px;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+.weekly {
+    list-style: none;
+    padding: 0;
+}
+
+.weekly li {
+    background: #ffcc00;
+    margin: 10px;
+    padding: 5px 10px 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #1e1e2e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.claim-action {
+    background-color: #222;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.claim-action:hover {
+    background: #222;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
 }
 
 h3 {
@@ -189,11 +223,12 @@ h2 {
 }
 
 .page-button:hover {
+    background: #ffcc00;
     transform: scale(1.1);
     box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
 }
 
-.page-button:disabled {
+button:disabled {
     background-color: #ccc;
     color: #666;
     cursor: not-allowed;

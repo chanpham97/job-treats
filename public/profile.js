@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const perPage = 8;
+    const perPage = 12;
     let currentPage = 1;
 
     // This function is called in profile.ejs, so it gets data dynamically

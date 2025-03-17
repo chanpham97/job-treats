@@ -19,9 +19,23 @@
                 <button class="edit-button">Edit</button>
             </div>
 
+            <div class="weekly">
+                <h3>Weekly Treats</h3>
+                <% for (let i=0; i < user.earnedTreats.length; i++){ %>
+                    <li>
+                        Earned a <%= user.earnedTreats[i].treat.name %> for <%= user.earnedTreats[i].weekOfFormatted %>
+                        <% if(user.earnedTreats[i].redeemed){ %> 
+                            <button class="claim-action" data-id="<%= user.earnedTreats[i]._id %>" disabled>Claimed</button>
+                        <% } else { %>
+                            <button class="claim-action" data-id="<%= user.earnedTreats[i]._id %>">Claim</button>
+                        <% } %>
+                    </li>
+                    <% } %>
+            </div>
+
             <!-- Achievements -->
             <div class="achievements">
-                <h3>Achievements</h3>
+                <h3>Badges Earned</h3>
                 <div class="badge-container">
                     <div class="badge">
                         <div class="badge-icon">🍪</div>

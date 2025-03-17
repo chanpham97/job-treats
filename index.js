@@ -47,7 +47,8 @@ const userSchema = new Schema({
     earnedTreats: [{
         treat: { type: Schema.Types.ObjectId, ref: 'Treat' },
         earnedAt: { type: Date, default: Date.now },
-        weekOf: { type: Date, required: true }
+        weekOf: { type: Date, required: true },
+        redeemed: { type: Boolean, default: false }
     }]
 });
 
@@ -57,7 +58,6 @@ const treatSchema = new Schema({
     pointsRequired: Number,
     icon: String
 });
-
 
 const User = model('User', userSchema);
 const Action = model('Action', actionSchema);
@@ -317,13 +317,18 @@ app.get("/history", async function (req, res) {
 })
 
 app.get("/profile/:name", async function (req, res) {
-    const userData = await User.findOne({ name: req.params.name })
+    const userData = await User.findOne({ name: req.params.name }).populate('earnedTreats.treat').lean()
     userData["joinDate"] = formatDate(userData._id.getTimestamp())
+    for (let i = 0; i < userData.earnedTreats.length; i++){
+        const treat = userData.earnedTreats[i]
+        treat["weekOfFormatted"] = formatDate(treat.weekOf)
+    }
+   
     const data = {
         user: userData,
         actions: await Action.find({ user: userData._id }).sort({ date: -1 })
     }
-    console.log(data)
+    console.log(data.user.earnedTreats)
     res.render("profile.ejs", data)
 })
 
@@ -359,7 +364,8 @@ app.patch("/treats/user-add", async function (req, res) {
     user.earnedTreats.push({
         treat: treatId,
         earnedAt: now,
-        weekOf: weekOf
+        weekOf: weekOf,
+        redeemed: false
     });
 
     try {
