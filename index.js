@@ -45,14 +45,14 @@ const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
     weeklyGoal: { type: Number },
     earnedTreats: [{
-        treat: { type: Schema.Types.ObjectId, ref: 'Treat' },
+        treatType: { type: Schema.Types.ObjectId, ref: 'TreatType' },
         earnedAt: { type: Date, default: Date.now },
         weekOf: { type: Date, required: true },
         redeemed: { type: Boolean, default: false }
     }]
 });
 
-const treatSchema = new Schema({
+const treatTypeSchema = new Schema({
     name: { type: String, required: true },
     category: { type: String, enum: ['weekly', 'total'] },
     pointsRequired: Number,
@@ -62,7 +62,7 @@ const treatSchema = new Schema({
 const User = model('User', userSchema);
 const Action = model('Action', actionSchema);
 const ActionType = model('ActionType', actionTypeSchema)
-const Treat = model('Treat', treatSchema)
+const TreatType = model('TreatType', treatTypeSchema)
 
 function formatDate(date) {
     // Check if date is a string and parse it
@@ -147,8 +147,8 @@ async function getUsersForScoreboard() {
         },
         {
             $lookup: {
-                from: 'treats',
-                localField: 'earnedTreats.treat',
+                from: 'treattypes',
+                localField: 'earnedTreats.treatType',
                 foreignField: '_id',
                 as: 'treatObjects'
             }
@@ -181,7 +181,7 @@ async function getUsersForScoreboard() {
                                                 $filter: {
                                                     input: '$treatObjects',
                                                     as: 'treatObj',
-                                                    cond: { $eq: ['$$treatObj._id', '$$weeklyEarned.treat'] }
+                                                    cond: { $eq: ['$$treatObj._id', '$$weeklyEarned.treatType'] }
                                                 }
                                             },
                                             0
@@ -317,7 +317,7 @@ app.get("/history", async function (req, res) {
 })
 
 app.get("/profile/:name", async function (req, res) {
-    const userData = await User.findOne({ name: req.params.name }).populate('earnedTreats.treat').lean()
+    const userData = await User.findOne({ name: req.params.name }).populate('earnedTreats.treatType').lean()
     userData["joinDate"] = formatDate(userData._id.getTimestamp())
     for (let i = 0; i < userData.earnedTreats.length; i++){
         const treat = userData.earnedTreats[i]
@@ -333,10 +333,55 @@ app.get("/profile/:name", async function (req, res) {
 })
 
 app.get("/treats/weekly", async function (req, res) {
-    res.json(await Treat.find({ category: 'weekly' }))
+    res.json(await TreatType.find({ category: 'weekly' }))
 })
 
 app.patch("/treats/user-add", async function (req, res) {
+    const { userId, treatTypeId } = req.body;
+
+    const user = await User.findById(userId).populate('earnedTreats')
+    if (!user) {
+        console.log(`User with ID ${userId} not found`)
+        return res.status(404).send(`User with ID ${userId} not found`);
+    }
+
+    const treatType = await TreatType.findById(treatTypeId);
+    if (!treatType) {
+
+        console.log(`Treat with ID ${treatTypeId} not found`)
+        return res.status(404).send(`Treat with ID ${treatTypeId} not found`);
+    }
+
+    const now = new Date();
+    const weekOf = getStartOfWeek(now);
+    console.log(`Adding treat ${treatTypeId} for user ${userId} on week of ${weekOf}`)
+
+    const existingTreat = user.earnedTreats.find(earned =>
+        earned.treatType.toString() === treatTypeId &&
+        new Date(earned.weekOf).toDateString() === weekOf.toDateString()
+    );
+
+    if (existingTreat) {
+        return res.status(409).send('User already has this treat for the current week');
+    }
+
+    user.earnedTreats.push({
+        treatType: treatTypeId,
+        earnedAt: now,
+        weekOf: weekOf,
+        redeemed: false
+    });
+
+    try {
+        const response = await user.save()
+        console.log(response)
+        res.json(response)
+    } catch (error) {
+        console.error(error.message);
+    }
+})
+
+app.patch("/treats/user-claim", async function (req, res) {
     const { userId, treatId } = req.body;
 
     const user = await User.findById(userId).populate('earnedTreats')
@@ -362,7 +407,7 @@ app.patch("/treats/user-add", async function (req, res) {
     }
 
     user.earnedTreats.push({
-        treat: treatId,
+        treatType: treatId,
         earnedAt: now,
         weekOf: weekOf,
         redeemed: false

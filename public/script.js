@@ -135,7 +135,7 @@ async function checkForTreat(userName, pointsAdded) {
                 },
                 body: JSON.stringify({
                     userId: user._id,
-                    treatId: treat._id
+                    treatTypeId: treat._id
                 })
             });
             console.log(response)
