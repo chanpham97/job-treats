@@ -139,7 +139,9 @@ async function checkForTreat(userName, pointsAdded) {
                 })
             });
             console.log(response)
-            showPopup(`You earned a ${treat.name}`);
+            if(response.status === 200){
+                showPopup(`You earned a ${treat.name}`);
+            }
         } catch(error) {
             console.log(error)
         }
