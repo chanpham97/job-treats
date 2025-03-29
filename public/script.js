@@ -134,13 +134,15 @@ async function checkForTreat(userName, pointsAdded) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    userId: user._id,
+                    user: user.name,
                     treatTypeId: treat._id
                 })
             });
             console.log(response)
             if(response.status === 200){
                 showPopup(`You earned a ${treat.name}`);
+            } else {
+                window.location.reload()
             }
         } catch(error) {
             console.log(error)
