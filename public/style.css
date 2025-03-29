@@ -77,14 +77,15 @@ h1 {
 
 /* User Select Dropdown */
 #userSelect {
-    padding: 8px;
-    font-size: 14px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    padding: 12px;
     border-radius: 5px;
-    height: 45px; /* Adjust height to fit the longest name */
-    line-height: 20px; /* Ensure text is centered */
     background-color: #333;
     color: #fff;
-    border: 1px solid #444;
+    width: 100%; /* Full width for mobile */
+    max-width: 200px; /* Optional: maximum width */
+    text-align: center;
 }
 
 /* Buttons */
@@ -218,53 +219,33 @@ li {
 
 /* Pop-up Styling */
 .popup {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4); /* Black with transparency */
+    background-color: rgba(0,0,0,0.4);
     justify-content: center;
     align-items: center;
     color: white;
 }
 
-.popup-content {
-    background-color: #333;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 300px;
-}
-
 .popup-content h2 {
     font-size: 18px;
     margin-bottom: 15px;
-    color: #ffcc00;
+    color: red;
 }
 
 .popup-content p {
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.popup-content button {
-    font-family: 'Press Start 2P', cursive;
-    background-color: #ffcc00;
-    color: #1e1e2e;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
     font-size: 14px;
+    margin-bottom: 20px;
 }
-
-.popup-content button:hover {
-    background-color: #ffb900;
+#popupMessage {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffcc00;
 }
 
 #popupBtn {
@@ -349,4 +330,18 @@ li {
     color: #666;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .earn-button {
+        width: 90%; /* Make buttons responsive */
+        height: auto; /* Adjust the height dynamically */
+    }
+    .scoreboard, .history-button {
+        display: none;
+    }
 }
