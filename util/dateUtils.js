@@ -13,8 +13,9 @@ function formatDate(date) {
 }
 
 function getStartOfWeek(date) {
-    const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - date.getDay());
+    const estDate = new Date(date.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    const startOfWeek = new Date(estDate);
+    startOfWeek.setDate(estDate.getDate() - estDate.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
     return startOfWeek
 }
@@ -22,7 +23,7 @@ function getStartOfWeek(date) {
 function getEndOfWeek(date) {
     const startOfWeek = getStartOfWeek(date)
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
     return endOfWeek
 }
