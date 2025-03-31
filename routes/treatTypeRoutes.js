@@ -26,7 +26,7 @@ router.patch("/user-add", async function (req, res) {
 
     const now = new Date();
     const weekOf = getStartOfWeek(now);
-    console.log(`Adding treat ${treatTypeId} for user ${userId} on week of ${weekOf}`)
+    console.log(`Adding treat ${treatTypeId} for user ${name} on week of ${weekOf}`)
 
     const existingTreat = user.earnedTreats.find(earned =>
         earned.treatType.toString() === treatTypeId &&

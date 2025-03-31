@@ -116,14 +116,14 @@ async function checkForTreat(userName, pointsAdded) {
     const newTotalPoints = currentWeeklyPoints + pointsAdded;
     const earnedTreatIds = user.weeklyTreats ? user.weeklyTreats.map(treat => treat.treat) : [];
 
-    console.log(earnedTreatIds)
+    // console.log(earnedTreatIds)
     const newlyEligibleTreats = availableTreats.filter(treat =>
         newTotalPoints >= treat.pointsRequired && !earnedTreatIds.includes(treat._id)
     );
 
     if (newlyEligibleTreats.length === 0) {
         console.log('No eligible treats')
-        window.location.reload()
+        // window.location.reload()
     }
 
     for (const treat of newlyEligibleTreats) {
@@ -134,7 +134,7 @@ async function checkForTreat(userName, pointsAdded) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    user: user.name,
+                    name: user.name,
                     treatTypeId: treat._id
                 })
             });
@@ -142,7 +142,7 @@ async function checkForTreat(userName, pointsAdded) {
             if(response.status === 200){
                 showPopup(`You earned a ${treat.name}`);
             } else {
-                window.location.reload()
+                // window.location.reload()
             }
         } catch(error) {
             console.log(error)

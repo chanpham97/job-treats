@@ -219,33 +219,53 @@ li {
 
 /* Pop-up Styling */
 .popup {
-    display: none;
+    display: none; /* Hidden by default */
     position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.4);
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Black with transparency */
     justify-content: center;
     align-items: center;
     color: white;
 }
 
+.popup-content {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+}
+
 .popup-content h2 {
     font-size: 18px;
     margin-bottom: 15px;
-    color: red;
+    color: #ffcc00;
 }
 
 .popup-content p {
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 20px;
+    color: white;
 }
-#popupMessage {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #ffcc00;
+
+.popup-content button {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #ffcc00;
+    color: #1e1e2e;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.popup-content button:hover {
+    background-color: #ffb900;
 }
 
 #popupBtn {
