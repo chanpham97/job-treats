@@ -123,7 +123,7 @@ async function checkForTreat(userName, pointsAdded) {
 
     if (newlyEligibleTreats.length === 0) {
         console.log('No eligible treats')
-        // window.location.reload()
+        window.location.reload()
     }
 
     for (const treat of newlyEligibleTreats) {
@@ -142,7 +142,7 @@ async function checkForTreat(userName, pointsAdded) {
             if(response.status === 200){
                 showPopup(`You earned a ${treat.name}`);
             } else {
-                // window.location.reload()
+                window.location.reload()
             }
         } catch(error) {
             console.log(error)
