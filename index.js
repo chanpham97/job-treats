@@ -3,7 +3,7 @@ import { connect } from 'mongoose'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { router as actionRoutes, getRecentActions, getActionsForUserProfile } from './routes/actionRoutes.js'
+import { router as actionRoutes, getRecentActions, getActionsForUserProfile, getActionCountsForUserProfile } from './routes/actionRoutes.js'
 import { router as userRoutes, getUsersForScoreboard, getAllUsers, getUserProfileData } from './routes/userRoutes.js'
 import { getActionTypes } from './routes/actionTypeRoutes.js'
 import treatTypesRoutes from './routes/treatTypeRoutes.js'
@@ -59,8 +59,11 @@ app.get("/profile/:name", async function (req, res) {
    
     const data = {
         user: userData,
-        actions: await getActionsForUserProfile(userData._id)
+        actions: await getActionsForUserProfile(userData._id),
+        actionCounts: await getActionCountsForUserProfile(userData._id, ["Applied to a job", "Completed a job interview"])
     }
+
+    // console.log(data)
     res.render("profile.ejs", data)
 })
 

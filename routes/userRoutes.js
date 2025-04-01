@@ -1,5 +1,6 @@
 import express from 'express'
 import User from "../models/User.js"
+import Action from "../models/Action.js"
 import { formatDate, getStartOfWeek, getEndOfWeek } from '../util/dateUtils.js'
 const router = express.Router()
 
@@ -178,7 +179,7 @@ async function getUserProfileData(name){
         const treat = userData.earnedTreats[i]
         treat["weekOfFormatted"] = formatDate(treat.weekOf)
     }
-
+    
     return userData
 }
 

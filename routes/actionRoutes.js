@@ -1,5 +1,7 @@
 import express from 'express'
+import mongoose from 'mongoose'
 import Action from "../models/Action.js"
+import ActionType from "../models/ActionType.js"
 import { getUser } from "./userRoutes.js"
 import { formatDate } from "../util/dateUtils.js"
 const router = express.Router()
@@ -49,15 +51,57 @@ router.delete('/delete/:id', async (req, res) => {
     }
 });
 
-async function getRecentActions(count){
+async function getRecentActions(count) {
     return Action.find()
-    .sort({ date: -1 })
-    .limit(count)
-    .populate("user")
+        .sort({ date: -1 })
+        .limit(count)
+        .populate("user")
 }
 
-async function getActionsForUserProfile(userId){
+async function getActionsForUserProfile(userId) {
     return Action.find({ user: userId }).sort({ date: -1 })
 }
 
-export { router, getRecentActions, getActionsForUserProfile }
+async function getActionCountsForUserProfile(userId, actionTypeNames = null) {
+    try {
+        const matchStage = { user: new mongoose.Types.ObjectId(userId) };
+
+        if (actionTypeNames && actionTypeNames.length > 0) {
+            matchStage["actionType"] = {
+                $in: await ActionType.find({ name: { $in: actionTypeNames } }).distinct("_id")
+            };
+        }
+
+        console.log(matchStage)
+
+        const actionCounts = await Action.aggregate([
+            { $match: matchStage },
+            {
+                $lookup: {
+                    from: "actiontypes",
+                    localField: "actionType",
+                    foreignField: "_id",
+                    as: "actionTypeDetails"
+                }
+            },
+            { $unwind: "$actionTypeDetails" },
+            { 
+                $group: { 
+                    _id: "$actionTypeDetails.name", 
+                    count: { $sum: 1 } 
+                }
+            }
+        ]);
+
+        return actionCounts.reduce((acc, action) => {
+            acc[action._id] = action.count;
+            return acc;
+        }, {});
+
+    } catch (error) {
+        console.error("Error in getUserActionBreakdown:", error);
+        return {};
+    }
+};
+
+export { router, getRecentActions, getActionsForUserProfile, getActionCountsForUserProfile as getActionCountsForUserProfile }

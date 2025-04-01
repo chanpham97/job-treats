@@ -27,7 +27,7 @@ body {
 }
 
 /* User Info & Achievements (Same Background) */
-.user-info, .achievements, .weekly {
+.user-info, .achievements, .weekly, .counts {
     background: #44475a; /* Matching background color */
     padding: 20px;
     border-radius: 15px;
@@ -35,6 +35,9 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+.achievements p {
+    font-size: 14px;
+}
 
 .weekly {
     list-style: none;
